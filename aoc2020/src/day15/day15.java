@@ -31,19 +31,14 @@ public class day15 {
         final HashMap<Long, Long> map = new HashMap<>();
         long i = 0;
         for (; i < numbers.size() - 1; i++) {
-            map.put(numbers.get((int) i), (long) i);
+            map.put(numbers.get((int) i), i);
         }
 
         long n = numbers.get((int) i);
         for (; i < target - 1; i++) {
             final Long prev = map.get(n);
             map.put(n, i);
-            if (prev == null) {
-                n = 0;
-            } else {
-                n = i - prev;
-            }
-            
+            n = prev == null ? 0 : i - prev;
         }
 
         return n;
