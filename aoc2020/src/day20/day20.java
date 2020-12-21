@@ -39,8 +39,8 @@ public class day20 {
     }
 
     private static void part1(List<Tile> tiles) {
-        tiles.get(0).buildGraph(tiles);
-        System.out.println(tiles.stream().filter(a -> a.countFreeEdges() == 2).map(a -> a.id).reduce((a, b) -> a *= b).get());
+        Tile.buildGraph(tiles);
+        System.out.println(tiles.stream().filter(a -> a.isCorner()).map(a -> a.id).reduce((a, b) -> a *= b).get());
     }
 
     private static void part2(List<Tile> tiles) {
@@ -50,9 +50,9 @@ public class day20 {
             { false, true, false, false, true, false, false, true, false, false, true, false, false, true, false, false, true, false, false, false }
         };
 
-        tiles.get(0).buildGraph(tiles);
+        Tile.buildGraph(tiles);
 
-        List<List<Boolean>> image = tiles.stream().filter(a -> a.up == null && a.left == null).findFirst().get().getImage();
+        List<List<Boolean>> image = Tile.getImage(tiles);
         final long totalRoughness = image.stream().map(a -> a.stream().map(b -> b ? 1 : 0).reduce((c, d) -> c + d).get()).reduce((a, b) -> a + b).get();
 
         for (int f = 0; f < 2; f++) {
@@ -120,21 +120,23 @@ public class day20 {
             }
         }
 
-        public int countFreeEdges() {
+        public boolean isCorner() {
             int c = 0;
             c += this.up == null ? 1 : 0;
             c += this.right == null ? 1 : 0;
             c += this.down == null ? 1 : 0;
             c += this.left == null ? 1 : 0;
 
-            return c;
+            return c == 2;
         }
 
-        public void buildGraph(List<Tile> tiles) {
+        public static void buildGraph(List<Tile> tiles) {
+            final Tile seed = tiles.get(0);
+
             final Set<Tile> loose = new HashSet<>(tiles);
-            loose.remove(this);
+            loose.remove(seed);
             final Deque<Tile> queue = new ArrayDeque<>();
-            queue.add(this);
+            queue.add(seed);
             while (!queue.isEmpty()) {
                 final Tile current = queue.pop();
                 for (Tile t : loose.toArray(new Tile[0])) {
@@ -157,10 +159,10 @@ public class day20 {
             }
         }
 
-        public List<List<Boolean>> getImage() {
+        public static List<List<Boolean>> getImage(List<Tile> tiles) {
             final List<List<Boolean>> out = new ArrayList<>();
 
-            Tile current = this;
+            Tile current = tiles.stream().filter(a -> a.up == null && a.left == null).findFirst().get();
             Tile first;
             Tile nextrow;
             while (current != null) {
