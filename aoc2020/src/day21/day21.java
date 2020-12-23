@@ -58,12 +58,13 @@ public class day21 {
         final HashMap<String, String> allergenMap = new HashMap<>();
         final HashMap<String, Set<String>> candidateMap = new HashMap<>();
         for (int i = 0; i < ingredients.size(); i++) {
+            final Set<String> v = ingredients.get(i).stream().filter(a -> !inertSet.contains(a)).collect(Collectors.toSet());
             for (String k : allergens.get(i)) {
                 if (!candidateMap.containsKey(k)) {
-                    candidateMap.put(k, new HashSet<>(ingredients.get(i)));
+                    candidateMap.put(k, new HashSet<>(v));
                     allergenMap.put(k, null);
                 } else {
-                    candidateMap.get(k).retainAll(ingredients.get(i).stream().filter(a -> !inertSet.contains(a)).collect(Collectors.toList()));
+                    candidateMap.get(k).retainAll(v);
                 }
             }
         }
