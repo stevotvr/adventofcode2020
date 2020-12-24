@@ -6,7 +6,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,15 +68,15 @@ public class day23 {
     private static void part2(List<Integer> cups) {
         final int max = 1000000;
 
-        final HashMap<Integer, Cup> cupMap = new HashMap<>();
+        final Cup[] cupMap = new Cup[max + 1];
 
         Cup head = new Cup(cups.get(0));
-        cupMap.put(head.value, head);
+        cupMap[head.value] = head;
         Cup tail = head;
 
         for (int i = 1; i < cups.size(); i++) {
             final Cup c = new Cup(cups.get(i));
-            cupMap.put(c.value, c);
+            cupMap[c.value] = c;
             c.next = head;
             tail.next = c;
             tail = c;
@@ -85,7 +84,7 @@ public class day23 {
 
         for (int i = Collections.max(cups) + 1; i <= max; i++) {
             final Cup c = new Cup(i);
-            cupMap.put(c.value, c);
+            cupMap[c.value] = c;
             c.next = head;
             tail.next = c;
             tail = c;
@@ -104,7 +103,7 @@ public class day23 {
                 targetIndex = targetIndex < 1 ? max : targetIndex;
             }
 
-            final Cup target = cupMap.get(targetIndex);
+            final Cup target = cupMap[targetIndex];
 
             c3.next = target.next;
             target.next = c1;
@@ -112,7 +111,7 @@ public class day23 {
             head = current.next;
         }
 
-        final Cup one = cupMap.get(1);
+        final Cup one = cupMap[1];
         System.out.println((long)one.next.value * one.next.next.value);
     }
 
