@@ -40,45 +40,13 @@ public class day24 {
     }
 
     private static void part1(List<List<Integer>> instructions) {
-        final HashMap<Coord, Boolean> tiles = new HashMap<>();
-        final int[][] directions = new int[][] { { 1, -1, 0 }, { 0, -1, 1 }, { -1, 0, 1 }, { -1, 1, 0}, { 0, 1, -1 }, { 1, 0, -1 } };
-
-        for (List<Integer> path : instructions) {
-            final Coord pos = new Coord(0, 0, 0);
-            for (int d : path) {
-                pos.x += directions[d][0];
-                pos.y += directions[d][1];
-                pos.z += directions[d][2];
-            }
-
-            if (!tiles.containsKey(pos)) {
-                tiles.put(pos, true);
-            } else {
-                tiles.put(pos, !tiles.get(pos));
-            }
-        }
-
+        final HashMap<Coord, Boolean> tiles = getGrid(instructions);
         System.out.println(tiles.values().stream().filter(a -> a).count());
     }
 
     private static void part2(List<List<Integer>> instructions) {
-        HashMap<Coord, Boolean> tiles = new HashMap<>();
+        HashMap<Coord, Boolean> tiles = getGrid(instructions);
         final int[][] directions = new int[][] { { 1, -1, 0 }, { 0, -1, 1 }, { -1, 0, 1 }, { -1, 1, 0}, { 0, 1, -1 }, { 1, 0, -1 } };
-
-        for (List<Integer> path : instructions) {
-            final Coord pos = new Coord(0, 0, 0);
-            for (int d : path) {
-                pos.x += directions[d][0];
-                pos.y += directions[d][1];
-                pos.z += directions[d][2];
-            }
-
-            if (!tiles.containsKey(pos)) {
-                tiles.put(pos, true);
-            } else {
-                tiles.put(pos, !tiles.get(pos));
-            }
-        }
 
         int minX = tiles.keySet().stream().mapToInt(a -> a.x).min().getAsInt();
         int minY = tiles.keySet().stream().mapToInt(a -> a.y).min().getAsInt();
@@ -127,6 +95,28 @@ public class day24 {
         }
 
         System.out.println(tiles.values().stream().filter(a -> a).count());
+    }
+
+    private static HashMap<Coord, Boolean> getGrid(List<List<Integer>> instructions) {
+        final HashMap<Coord, Boolean> tiles = new HashMap<>();
+        final int[][] directions = new int[][] { { 1, -1, 0 }, { 0, -1, 1 }, { -1, 0, 1 }, { -1, 1, 0}, { 0, 1, -1 }, { 1, 0, -1 } };
+
+        for (List<Integer> path : instructions) {
+            final Coord pos = new Coord(0, 0, 0);
+            for (int d : path) {
+                pos.x += directions[d][0];
+                pos.y += directions[d][1];
+                pos.z += directions[d][2];
+            }
+
+            if (!tiles.containsKey(pos)) {
+                tiles.put(pos, true);
+            } else {
+                tiles.put(pos, !tiles.get(pos));
+            }
+        }
+
+        return tiles;
     }
 
     final static class Coord {
