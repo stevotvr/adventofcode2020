@@ -41,19 +41,20 @@ public class day23 {
             }
 
             final Deque<Integer> temp = new ArrayDeque<>();
-            do {
+            temp.addLast(current);
+            while (temp.peekLast() != dest) {
                 temp.addLast(queue.removeFirst());
-            } while (temp.peekLast() != dest);
+            }
 
             while (!selected.isEmpty()) {
                 queue.addFirst(selected.removeLast());
             }
 
-            while (!temp.isEmpty()) {
+            while (temp.size() > 1) {
                 queue.addFirst(temp.removeLast());
             }
 
-            queue.addLast(current);
+            queue.addLast(temp.removeLast());
         }
 
         while (queue.peekFirst() != 1) {
